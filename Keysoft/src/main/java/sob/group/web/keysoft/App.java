@@ -230,8 +230,8 @@ public class App {
 
 	public static void login(WebDriver driver) {
 		WebDriverWait wait = new WebDriverWait(driver, 20);
-		String username = "cabra";
-		String password = "101";
+		String username = "";
+		String password = "";
 		String baseUrl = "http://server1.keysoft.ie/keysoft/#!";
 		String xpathNewOrder = "//*[@id=\"BtnNew.0\"]";
 		driver.get(baseUrl);
