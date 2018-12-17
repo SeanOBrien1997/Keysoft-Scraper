@@ -18,6 +18,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -30,12 +31,11 @@ public class App {
 
 	public static void main(String[] args) throws Exception {
 		int[] sections = getSectionsInput();
-		WebDriver driver = setUp();
+		WebDriver driver = setUp(true);
 		login(driver);
 		List<String> list = loopSectionsList(driver, sections);
 		List<Product> pList = Product.makeProductList(list);
 		searchLists(pList);
-
 	}
 
 	public static int[] getSectionsInput() {
@@ -51,6 +51,7 @@ public class App {
 	}
 
 	public static void searchLists(List<Product> pList) {
+		System.out.println("Enter search: ");
 		String search = sc.nextLine();
 		while (!search.equals("stop search")) {
 			for (Product p : pList) {
@@ -61,6 +62,7 @@ public class App {
 					System.out.println("\033[H\033[2J");
 				}
 			}
+			System.out.println("Enter search: ");
 			search = sc.nextLine().toLowerCase();
 		}
 
@@ -228,8 +230,8 @@ public class App {
 
 	public static void login(WebDriver driver) {
 		WebDriverWait wait = new WebDriverWait(driver, 20);
-		String username = "";
-		String password = "";
+		String username = "cabra";
+		String password = "101";
 		String baseUrl = "http://server1.keysoft.ie/keysoft/#!";
 		String xpathNewOrder = "//*[@id=\"BtnNew.0\"]";
 		driver.get(baseUrl);
@@ -242,9 +244,16 @@ public class App {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	}
 
-	public static WebDriver setUp() {
+	public static WebDriver setUp(boolean headless) {
 		System.setProperty("webdriver.chrome.driver", "A:\\Webscraping\\chromedriver\\chromedriver.exe");
-		WebDriver driver = new ChromeDriver();
+		WebDriver driver;
+		if (headless) {
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments("--headless");
+			driver = new ChromeDriver(options);
+		} else {
+			driver = new ChromeDriver();
+		}
 		return driver;
 	}
 
