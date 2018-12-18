@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -30,7 +31,7 @@ public class App {
 	static final Scanner sc = new Scanner(System.in);
 
 	public static void main(String[] args) throws Exception {
-		int[] sections = getSectionsInput();
+		HashSet<Integer> sections = getSectionsInput();
 		WebDriver driver = setUp(true);
 		login(driver);
 		List<String> list = loopSectionsList(driver, sections);
@@ -38,7 +39,7 @@ public class App {
 		searchLists(pList);
 	}
 
-	public static int[] getSectionsInput() {
+	public static HashSet<Integer> getSectionsInput() {
 		String s = sc.nextLine().toUpperCase();
 		Set<String> sectionSet = new HashSet<String>();
 		while (!s.equals("STOP")) {
@@ -68,70 +69,36 @@ public class App {
 
 	}
 
-	public static int[] getSections(List<String> list) {
-		int[] ar = new int[list.size()];
-		for (int i = 0; i < list.size(); i++) {
-			String s = list.get(i);
-			switch (s) {
-			case "BATTERIES":
-				ar[i] = 0;
-				break;
-			case "CARDS":
-				ar[i] = 1;
-				break;
-			case "DUMPBINS":
-				ar[i] = 2;
-				break;
-			case "ELECTRICAL & AUDIO":
-				ar[i] = 3;
-				break;
-			case "FANCY GOODS":
-				ar[i] = 4;
-				break;
-			case "HAIR FASHION":
-				ar[i] = 5;
-				break;
-			case "HATS&SCARVES&GLOVES":
-				ar[i] = 6;
-				break;
-			case "HOUSEHOLD":
-				ar[i] = 7;
-				break;
-			case "PAPER BAGS":
-				ar[i] = 8;
-				break;
-			case "PRICE STICKERS":
-				ar[i] = 9;
-				break;
-			case "SEASON":
-				ar[i] = 10;
-				break;
-			case "STATIONERY":
-				ar[i] = 11;
-				break;
-			case "SWEETS":
-				ar[i] = 12;
-				break;
-			case "TISSUES":
-				ar[i] = 13;
-				break;
-			case "TOILETRIES":
-				ar[i] = 14;
-				break;
-			case "TOYS":
-				ar[i] = 15;
-				break;
-			case "WRAP":
-				ar[i] = 16;
-				break;
-			default:
-				System.out.println("Error: Invalid entry for section");
+	public static HashSet<Integer> getSections(List<String> list) {
+		HashSet<String> hashSet = new HashSet<String>(list);
+		HashMap<String, Integer> sectionMap = new HashMap<String, Integer>();
+		sectionMap.put("BATTERIES", 0);
+		sectionMap.put("CARDS", 1);
+		sectionMap.put("DUMPBINS", 2);
+		sectionMap.put("ELECTRICAL & AUDIO", 3);
+		sectionMap.put("FANCY GOODS", 4);
+		sectionMap.put("HAIR FASHION", 5);
+		sectionMap.put("HATS&SCARVES&GLOVES", 6);
+		sectionMap.put("HOUSEHOLD", 7);
+		sectionMap.put("PAPER BAGS", 8);
+		sectionMap.put("PRICE STICKERS", 9);
+		sectionMap.put("SEASON", 10);
+		sectionMap.put("STATIONERY", 11);
+		sectionMap.put("SWEETS", 12);
+		sectionMap.put("TISSUES", 13);
+		sectionMap.put("TOILETRIES", 14);
+		sectionMap.put("TOYS", 15);
+		sectionMap.put("WRAP", 16);
+		HashSet<Integer> requestList = new HashSet<Integer>();
+		for (String key : hashSet) {
+			if (sectionMap.containsKey(key)) {
+				requestList.add(sectionMap.get(key));
 			}
 		}
-		return ar;
+		return requestList;
 	}
 
-	public static List<String> loopSectionsList(WebDriver driver, int[] sections) throws IOException {
+	public static List<String> loopSectionsList(WebDriver driver, HashSet<Integer> sections) throws IOException {
 		List<String> list = new ArrayList<String>();
 		for (int index : sections) {
 			goToSection(driver, index);
@@ -230,8 +197,8 @@ public class App {
 
 	public static void login(WebDriver driver) {
 		WebDriverWait wait = new WebDriverWait(driver, 20);
-		String username = "";
-		String password = "";
+		String username = "cabra";
+		String password = "101";
 		String baseUrl = "http://server1.keysoft.ie/keysoft/#!";
 		String xpathNewOrder = "//*[@id=\"BtnNew.0\"]";
 		driver.get(baseUrl);
