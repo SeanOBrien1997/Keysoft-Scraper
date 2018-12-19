@@ -1,9 +1,5 @@
 package sob.group.web.keysoft;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,13 +26,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class App {
 	static final Scanner sc = new Scanner(System.in);
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		HashSet<Integer> sections = getSectionsInput();
+		System.out.println(sections);
 		WebDriver driver = setUp(true);
 		login(driver);
 		List<String> list = loopSectionsList(driver, sections);
 		List<Product> pList = Product.makeProductList(list);
 		searchLists(pList);
+		driver.close();
 	}
 
 	public static HashSet<Integer> getSectionsInput() {
@@ -46,7 +44,6 @@ public class App {
 			sectionSet.add(s);
 			s = sc.nextLine().toUpperCase();
 		}
-
 		List<String> sect = new ArrayList<String>(sectionSet);
 		return getSections(sect);
 	}
@@ -54,17 +51,15 @@ public class App {
 	public static void searchLists(List<Product> pList) {
 		System.out.println("Enter search: ");
 		String search = sc.nextLine();
-		while (!search.equals("stop search")) {
+		while (!search.equals("STOP SEARCH")) {
 			for (Product p : pList) {
-				String s = p.getName().toLowerCase();
+				String s = p.getName().toUpperCase();
 				if (s.contains(search)) {
 					System.out.println(p.toString());
-				} else if (search.equals("flush screen")) {
-					System.out.println("\033[H\033[2J");
 				}
 			}
 			System.out.println("Enter search: ");
-			search = sc.nextLine().toLowerCase();
+			search = sc.nextLine().toUpperCase();
 		}
 
 	}
@@ -98,7 +93,7 @@ public class App {
 		return requestList;
 	}
 
-	public static List<String> loopSectionsList(WebDriver driver, HashSet<Integer> sections) throws IOException {
+	public static List<String> loopSectionsList(WebDriver driver, HashSet<Integer> sections) {
 		List<String> list = new ArrayList<String>();
 		for (int index : sections) {
 			goToSection(driver, index);
@@ -186,11 +181,11 @@ public class App {
 		return Jsoup.parse(driver.getPageSource());
 	}
 
-	public static void goToSection(WebDriver driver, int section) throws IOException {
-		String xPaths = "C:\\\\Users\\\\Sean\\\\Desktop\\\\xPaths\\\\test.txt";
-		List<String> sectionsXpaths = readTextFile(xPaths);
+	public static void goToSection(WebDriver driver, int section) {
+		section++;
+		String xpath = "//*[@id=\"0\"]/table/tbody/tr[" + section + "]/td[5]/a";
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		driver.findElement(By.xpath(sectionsXpaths.get(section))).click();
+		driver.findElement(By.xpath(xpath)).click();
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#\\30 > table")));
 	}
@@ -253,15 +248,4 @@ public class App {
 		return list;
 	}
 
-	public static List<String> readTextFile(String path) throws IOException {
-		List<String> list = new ArrayList<String>();
-		File file = new File(path);
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		String s;
-		while ((s = br.readLine()) != null) {
-			list.add(s);
-		}
-		br.close();
-		return list;
-	}
 }
