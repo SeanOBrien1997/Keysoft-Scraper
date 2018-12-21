@@ -71,7 +71,6 @@ public class App {
 			System.out.println("ENTER SEARCH: ");
 			search = sc.nextLine().toUpperCase();
 		}
-
 	}
 
 	public static HashSet<Integer> getSections(List<String> list) {
