@@ -1,5 +1,3 @@
-package sob.group.web.keysoft;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,7 +26,6 @@ public class App {
 
 	public static void main(String[] args) {
 		HashSet<Integer> sections = getSectionsInput();
-		System.out.println(sections);
 		WebDriver driver = setUp(true);
 		login(driver);
 		List<String> list = loopSectionsList(driver, sections);
@@ -40,7 +37,14 @@ public class App {
 	public static HashSet<Integer> getSectionsInput() {
 		String s = sc.nextLine().toUpperCase();
 		Set<String> sectionSet = new HashSet<String>();
-		while (!s.equals("STOP")) {
+		while (!s.equals("DONE")) {
+			if (s.equals("ALL")) {
+				HashSet<Integer> allSections = new HashSet<Integer>();
+				for (int i = 0; i < 17; i++) {
+					allSections.add(i);
+				}
+				return allSections;
+			}
 			sectionSet.add(s);
 			s = sc.nextLine().toUpperCase();
 		}
@@ -49,16 +53,22 @@ public class App {
 	}
 
 	public static void searchLists(List<Product> pList) {
-		System.out.println("Enter search: ");
-		String search = sc.nextLine();
-		while (!search.equals("STOP SEARCH")) {
+		System.out.println("ENTER SEARCH: ");
+		String search = sc.nextLine().toUpperCase();
+		boolean found;
+		while (!search.equals("STOP")) {
+			found = false;
 			for (Product p : pList) {
 				String s = p.getName().toUpperCase();
 				if (s.contains(search)) {
 					System.out.println(p.toString());
+					found = true;
 				}
 			}
-			System.out.println("Enter search: ");
+			if (!found) {
+				System.out.println("NOT FOUND");
+			}
+			System.out.println("ENTER SEARCH: ");
 			search = sc.nextLine().toUpperCase();
 		}
 
@@ -207,7 +217,7 @@ public class App {
 	}
 
 	public static WebDriver setUp(boolean headless) {
-		System.setProperty("webdriver.chrome.driver", "A:\\Webscraping\\chromedriver\\chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver", "lib\\chromedriver.exe");
 		WebDriver driver;
 		if (headless) {
 			ChromeOptions options = new ChromeOptions();
