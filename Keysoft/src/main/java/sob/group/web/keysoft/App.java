@@ -71,6 +71,7 @@ public class App {
 			System.out.println("ENTER SEARCH: ");
 			search = sc.nextLine().toUpperCase();
 		}
+
 	}
 
 	public static HashSet<Integer> getSections(List<String> list) {
@@ -216,7 +217,9 @@ public class App {
 	}
 
 	public static WebDriver setUp(boolean headless) {
-		System.setProperty("webdriver.chrome.driver", "lib\\chromedriver.exe");
+		// A:\\Webscraping\\chromedriver\\chromedriver.exe || lib\\chromedriver.exe (For
+		// packaged build)
+		System.setProperty("webdriver.chrome.driver", "A:\\Webscraping\\chromedriver\\chromedriver.exe");
 		WebDriver driver;
 		if (headless) {
 			ChromeOptions options = new ChromeOptions();
